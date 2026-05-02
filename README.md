@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# high5-booking
+
+Fitness coaching & session booking platform built with Next.js 14 (App Router), TypeScript, Tailwind CSS v3, and shadcn/ui.
+
+## Tech Stack
+
+| Tool | Version |
+|------|---------|
+| Next.js | 14 (App Router) |
+| TypeScript | ^5 |
+| Tailwind CSS | ^3.4 |
+| shadcn/ui | latest |
+| Font | Geist (next/font/google) |
+| Package manager | pnpm |
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Install dependencies
+pnpm install
+
+# Start development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build & Run
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build
+pnpm start
+```
 
-## Learn More
+## Linting
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Path | Description |
+|------|-------------|
+| `/` | Landing page |
+| `/book/trial` | Book a trial session |
+| `/book/consultation` | Book a consultation |
+| `/book/physio` | Book a physio session |
+| `/book/goal-setting` | Book a goal-setting session |
+| `/book/assessment` | Book an assessment |
+| `/member` | Member login (OTP) |
+| `/coach` | Coach dashboard |
+| `/admin` | Super admin |
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+high5-booking/
+├── app/
+│   ├── layout.tsx          # Root layout with Geist font
+│   ├── globals.css         # Tailwind base + CSS variables
+│   ├── page.tsx            # Landing
+│   ├── book/
+│   │   ├── trial/
+│   │   ├── consultation/
+│   │   ├── physio/
+│   │   ├── goal-setting/
+│   │   └── assessment/
+│   ├── member/
+│   ├── coach/
+│   └── admin/
+├── components/
+│   ├── ui/                 # shadcn/ui components
+│   ├── shared/             # Navbar, OtpModal, …
+│   ├── booking/            # Booking-specific components
+│   └── coach/              # Coach-specific components
+└── lib/
+    ├── constants.ts        # Brand colors, session types
+    ├── types.ts            # TypeScript interfaces
+    ├── mockData.ts         # Mock coaches, slots, bookings
+    └── utils.ts            # shadcn cn() utility
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Brand Colors
+
+```
+primary  #1E3A8A  — dark blue
+accent   #7AC143  — green
+danger   #EF4444
+warning  #F97316
+muted    #6B7280
+```
+
+Use them in Tailwind: `bg-primary`, `text-accent`, `border-danger`, etc.  
+Arbitrary values also work: `mb-[3rem]`, `text-[#1a1a1a]`.
+
+## Swapping the Font
+
+In `app/layout.tsx`, replace the `Geist` import with any other `next/font/google` font and keep `variable: "--font-sans"` — Tailwind's `font-sans` will pick it up automatically.
+
+## Adding shadcn Components
+
+```bash
+pnpm dlx shadcn@latest add <component-name>
+```
