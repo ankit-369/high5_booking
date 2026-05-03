@@ -76,32 +76,28 @@ export default function LandingPage() {
   const router = useRouter();
 
   const [otpOpen, setOtpOpen]           = useState(false);
-  const [otpMode, setOtpMode]           = useState<"login" | "booking">("login");
+  // const [otpMode, setOtpMode]           = useState<"login" | "booking">("login");
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
   function openMemberLogin() {
-    setOtpMode("login");
-    setPendingRoute("/member");
-    setOtpOpen(true);
+    // setOtpMode("login");
+  router.push("/member");
+    // setOtpOpen(true);
   }
 
   function openBookingOtp(href: string) {
-    setOtpMode("booking");
+    // setOtpMode("booking");
     setPendingRoute(href);
     setOtpOpen(true);
   }
 
   function handleVerified(phone: string) {
-    setOtpOpen(false);
-    if (!pendingRoute) return;
-    const rawPhone = phone.replace("+91", "");
-    const route =
-      pendingRoute === "/member"
-        ? "/member"
-        : `${pendingRoute}?phone=${rawPhone}`;
-    router.push(route);
-    setPendingRoute(null);
-  }
+  setOtpOpen(false);
+  if (!pendingRoute) return;
+  const rawPhone = phone.replace("+91", "");
+  router.push(`${pendingRoute}?phone=${rawPhone}`);
+  setPendingRoute(null);
+}
 
   return (
     <>
@@ -259,12 +255,12 @@ export default function LandingPage() {
       </section>
 
       {/* OTP modal */}
-      <OtpModal
+      {/* <OtpModal
         isOpen={otpOpen}
         onClose={() => setOtpOpen(false)}
         onVerified={handleVerified}
         mode={otpMode}
-      />
+      /> */}
     </>
   );
 }
