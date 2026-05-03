@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Navbar from "@/components/shared/Navbar";
-import OtpModal from "@/components/shared/OtpModal";
+// import OtpModal from "@/components/shared/OtpModal";
 import type { SessionType } from "@/lib/types";
 
 // ─── Programme data ────────────────────────────────────────────────────────────
@@ -75,9 +75,9 @@ const PROGRAMMES: Programme[] = [
 export default function LandingPage() {
   const router = useRouter();
 
-  const [otpOpen, setOtpOpen]           = useState(false);
+  // const [otpOpen, setOtpOpen]           = useState(false);
   // const [otpMode, setOtpMode]           = useState<"login" | "booking">("login");
-  const [pendingRoute, setPendingRoute] = useState<string | null>(null);
+  // const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
   function openMemberLogin() {
     // setOtpMode("login");
@@ -85,19 +85,11 @@ export default function LandingPage() {
     // setOtpOpen(true);
   }
 
-  function openBookingOtp(href: string) {
-    // setOtpMode("booking");
-    setPendingRoute(href);
-    setOtpOpen(true);
-  }
-
-  function handleVerified(phone: string) {
-  setOtpOpen(false);
-  if (!pendingRoute) return;
-  const rawPhone = phone.replace("+91", "");
-  router.push(`${pendingRoute}?phone=${rawPhone}`);
-  setPendingRoute(null);
+function openBookingOtp(href: string) {
+  router.push(href);
 }
+
+
 
   return (
     <>
