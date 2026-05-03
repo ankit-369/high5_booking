@@ -4,103 +4,79 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  Zap,
-  MessageSquare,
-  Activity,
-  Target,
-  ClipboardList,
-  ArrowRight,
-  Lock,
+  Zap, MessageSquare, Activity, Target, ClipboardList,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Navbar from "@/components/shared/Navbar";
 import OtpModal from "@/components/shared/OtpModal";
 import type { SessionType } from "@/lib/types";
 
-// ─── Programme card data ──────────────────────────────────────────────────────
+// ─── Programme data ────────────────────────────────────────────────────────────
 
 interface Programme {
   id: SessionType;
   icon: LucideIcon;
-  iconBg: string;
-  iconColor: string;
   title: string;
   description: string;
   href: string;
   membersOnly: boolean;
-  highlighted: boolean;
 }
 
 const PROGRAMMES: Programme[] = [
   {
     id: "trial",
     icon: Zap,
-    iconBg: "bg-blue-100",
-    iconColor: "text-blue-600",
     title: "Trial Session",
     description:
       "Begin with a complimentary session to experience our coaching approach first-hand. No commitment, no pressure.",
     href: "/book/trial",
     membersOnly: false,
-    highlighted: false,
   },
   {
     id: "consultation",
     icon: MessageSquare,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-700",
     title: "Expert Consultation",
     description:
       "A focused 1-on-1 with our specialists to map your health journey and craft a personalised programme.",
     href: "/book/consultation",
     membersOnly: false,
-    highlighted: true,
   },
   {
     id: "physio",
     icon: Activity,
-    iconBg: "bg-purple-100",
-    iconColor: "text-purple-600",
     title: "Physio Session",
     description:
       "Targeted physiotherapy for injury recovery, mobility improvement, and long-term movement health.",
     href: "/book/physio",
     membersOnly: false,
-    highlighted: false,
   },
   {
     id: "goal-setting",
     icon: Target,
-    iconBg: "bg-yellow-100",
-    iconColor: "text-yellow-700",
     title: "Goal Setting Session",
     description:
       "Structured planning to define milestones and build a clear, achievable roadmap to your goals.",
     href: "/book/goal-setting",
     membersOnly: true,
-    highlighted: false,
   },
   {
     id: "assessment",
     icon: ClipboardList,
-    iconBg: "bg-orange-100",
-    iconColor: "text-orange-600",
     title: "Fitness Assessment",
     description:
       "Comprehensive fitness and body composition analysis to benchmark where you are and track real progress.",
     href: "/book/assessment",
     membersOnly: true,
-    highlighted: false,
   },
 ];
 
-// ─── Page ───────────────────────────────────────────────────────────────────���─
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
   const router = useRouter();
 
-  const [otpOpen, setOtpOpen]         = useState(false);
-  const [otpMode, setOtpMode]         = useState<"login" | "booking">("login");
+  const [otpOpen, setOtpOpen]           = useState(false);
+  const [otpMode, setOtpMode]           = useState<"login" | "booking">("login");
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
   function openMemberLogin() {
@@ -115,62 +91,92 @@ export default function LandingPage() {
     setOtpOpen(true);
   }
 
-  function handleVerified() {
+  function handleVerified(phone: string) {
     setOtpOpen(false);
-    if (pendingRoute) {
-      router.push(pendingRoute);
-      setPendingRoute(null);
-    }
+    if (!pendingRoute) return;
+    const rawPhone = phone.replace("+91", "");
+    const route =
+      pendingRoute === "/member"
+        ? "/member"
+        : `${pendingRoute}?phone=${rawPhone}`;
+    router.push(route);
+    setPendingRoute(null);
   }
 
   return (
     <>
       <Navbar />
 
-      {/* ── HERO ──────────────────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-br from-blue-50 via-slate-50 to-sky-100 min-h-[88vh] flex items-center justify-center px-4 py-20">
-        <div className="max-w-3xl w-full text-center">
-
-          {/* Label */}
-          <div className="inline-flex items-center gap-2 mb-6">
-            <span className="h-px w-8 bg-gray-400 block" />
-            <span className="text-xs font-bold tracking-[0.25em] uppercase text-gray-500">
-              High5{" "}
-              <span style={{ color: "#7AC143" }}>PERFORMANCE</span>
+      {/* ── Ticker strip (landing page only) ──────────────────────────────── */}
+      {/* <div
+        className="h-9 overflow-hidden flex items-center border-b border-white/10"
+        style={{ backgroundColor: "#0B0C2A" }}
+      >
+        <div
+          className="flex whitespace-nowrap"
+          style={{ animation: "marquee 30s linear infinite" }}
+        >
+          {[0, 1].map((i) => (
+            <span
+              key={i}
+              className="text-[11px] tracking-[0.2em] uppercase px-6"
+              style={{ color: "rgba(255,255,255,0.4)" }}
+            >
+              PERFORMANCE LAB · PHYSIO THERAPY · LONGEVITY PROTOCOL · GROUP SANCTUARIES · PERFORMANCE LAB · PHYSIO THERAPY · LONGEVITY PROTOCOL · GROUP SANCTUARIES ·&nbsp;&nbsp;&nbsp;&nbsp;
             </span>
-            <span className="h-px w-8 bg-gray-400 block" />
-          </div>
+          ))}
+        </div>
+      </div> */}
+
+      {/* ══ HERO ═════════════════════════════════════════════════════════════ */}
+      <section
+        className="w-full min-h-[90vh] flex items-center justify-center px-4 text-center"
+        style={{ backgroundColor: "#0B0C2A" }}
+      >
+        <div className="max-w-3xl w-full py-20">
+
+          {/* Label + underline */}
+          <p
+            className="text-sm font-medium tracking-[0.3em] uppercase mb-2"
+            style={{ color: "#FF4F3C" }}
+          >
+            HIGH5 PERFORMANCE
+          </p>
+          <div className="w-12 h-px mx-auto mb-8" style={{ backgroundColor: "#FF4F3C" }} />
 
           {/* Heading */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-5">
+          <h1 className="font-bold leading-tight tracking-tight text-white text-5xl md:text-7xl">
             Where The Body Meets
             <br />
-            <span style={{ color: "#EF4444" }}>Its True Potential.</span>
+            <span style={{ color: "#FF4F3C" }}>Its True Potential.</span>
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-base sm:text-lg text-gray-500 max-w-xl mx-auto leading-relaxed mb-10">
+          {/* Subtext */}
+          <p
+            className="text-base md:text-lg max-w-xl mx-auto mt-6 leading-relaxed"
+            style={{ color: "rgba(255,255,255,0.5)" }}
+          >
             Elite coaching, science-led programmes, and personalised care —
             designed to help every body perform at its best.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          {/* CTA buttons */}
+          <div className="mt-10 flex items-center justify-center gap-4 flex-wrap">
             <Link
               href="/book/trial"
-              className="flex items-center gap-2 px-7 py-3.5 rounded-full
-                         bg-gray-900 text-white text-sm font-semibold
-                         hover:bg-gray-700 transition-colors shadow-md"
+              className="px-8 py-3.5 rounded-full text-sm font-medium transition-all duration-300
+                         border text-white hover:bg-white hover:text-[#0B0C2A]"
+              style={{ borderColor: "rgba(255,255,255,0.4)" }}
             >
-              Book A Free Trial
-              <ArrowRight size={16} />
+              Book A Free Trial →
             </Link>
 
             <button
               onClick={openMemberLogin}
-              className="flex items-center gap-2 px-7 py-3.5 rounded-full
-                         border border-gray-300 text-gray-600 text-sm font-semibold
-                         hover:border-gray-500 hover:text-gray-900 transition-colors bg-white/60"
+              className="text-sm underline underline-offset-4 transition-colors self-center"
+              style={{ color: "rgba(255,255,255,0.5)" }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "white"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.5)"; }}
             >
               Already A Member
             </button>
@@ -179,47 +185,75 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── PROGRAMMES ────────────────────────────────────────────────────── */}
-      <section className="bg-white py-20 px-4">
+      {/* ══ PROGRAMMES ═══════════════════════════════════════════════════════ */}
+      <section className="py-20 px-4" style={{ backgroundColor: "#F5F5F7" }}>
         <div className="max-w-6xl mx-auto">
 
           {/* Section header */}
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
             <div>
               <p
-                className="text-xs font-bold tracking-[0.2em] uppercase mb-2"
-                style={{ color: "#7AC143" }}
+                className="text-xs font-semibold tracking-widest uppercase mb-3"
+                style={{ color: "#FF4F3C" }}
               >
                 Our Programmes
               </p>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+              <h2
+                className="text-3xl sm:text-4xl font-bold tracking-tight"
+                style={{ color: "#0B0C2A" }}
+              >
                 Science-led,{" "}
-                <span className="text-gray-400">human-centred.</span>
+                <span className="font-light" style={{ color: "#6E6E73" }}>
+                  human-centred.
+                </span>
               </h2>
             </div>
 
             <button
               onClick={openMemberLogin}
-              className="text-sm text-gray-500 hover:text-gray-900 underline
-                         underline-offset-2 transition-colors shrink-0 self-start sm:self-auto"
+              className="text-sm shrink-0 self-start sm:self-auto transition-colors"
+              style={{ color: "#6E6E73" }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#0B0C2A"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#6E6E73"; }}
             >
-              Already a member? Login to access all sessions
+              Already a member?{" "}
+              <span className="underline underline-offset-2">
+                Login to access all sessions
+              </span>{" "}
+              →
             </button>
           </div>
 
-          {/* Cards grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {PROGRAMMES.map((prog) => (
-              <ProgrammeCard
-                key={prog.id}
-                programme={prog}
-                onBookNow={() =>
-                  prog.membersOnly
-                    ? openBookingOtp(prog.href)
-                    : router.push(prog.href)
-                }
-              />
-            ))}
+          {/* Cards — top row: 3, bottom row: 2 centered */}
+          <div className="flex flex-col gap-5">
+
+            {/* Top 3 */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {PROGRAMMES.slice(0, 3).map((prog) => (
+                <ProgrammeCard
+                  key={prog.id}
+                  programme={prog}
+                  onBookNow={() =>
+                    prog.membersOnly
+                      ? openBookingOtp(prog.href)
+                      : router.push(prog.href)
+                  }
+                />
+              ))}
+            </div>
+
+            {/* Bottom 2 — centred under top row */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {/* <div className="hidden sm:block" aria-hidden /> */}
+              {PROGRAMMES.slice(3).map((prog) => (
+                <ProgrammeCard
+                  key={prog.id}
+                  programme={prog}
+                  onBookNow={() => openBookingOtp(prog.href)}
+                />
+              ))}
+            </div>
+
           </div>
         </div>
       </section>
@@ -248,69 +282,55 @@ function ProgrammeCard({
 
   return (
     <article
-      className={[
-        "flex flex-col bg-white rounded-2xl p-6 transition-shadow hover:shadow-lg",
-        p.highlighted
-          ? "border-2 ring-0 shadow-md"
-          : "border border-gray-100 shadow-sm",
-      ].join(" ")}
-      style={
-        p.highlighted
-          ? { borderColor: "#7AC143" }
-          : undefined
-      }
+      className="flex flex-col bg-white rounded-2xl p-6 border cursor-pointer
+                 transition-all duration-250
+                 hover:border-[#0B0C2A] hover:shadow-lg hover:scale-[1.01]"
+      style={{ borderColor: "#E5E5EA", boxShadow: undefined }}
+      onClick={onBookNow}
     >
-      {/* Highlighted badge */}
-      {p.highlighted && (
-        <span
-          className="self-start mb-3 text-[10px] font-bold tracking-widest uppercase
-                     px-2.5 py-1 rounded-full text-white"
-          style={{ backgroundColor: "#7AC143" }}
-        >
-          Featured
-        </span>
-      )}
-
       {/* Icon */}
       <div
-        className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${p.iconBg}`}
+        className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 shrink-0"
+        style={{ backgroundColor: "#FFF0EE" }}
       >
-        <Icon size={20} className={p.iconColor} />
+        <Icon size={18} style={{ color: "#FF4F3C" }} />
       </div>
 
       {/* Title */}
-      <h3 className="text-base font-bold text-gray-900 mb-2">{p.title}</h3>
+      <h3
+        className="text-lg font-semibold mb-2"
+        style={{ color: "#0B0C2A" }}
+      >
+        {p.title}
+      </h3>
 
       {/* Description */}
-      <p className="text-sm text-gray-500 leading-relaxed flex-1">{p.description}</p>
-
-      {/* Divider */}
-      <div className="h-px bg-gray-100 my-5" />
+      <p
+        className="text-sm leading-relaxed flex-1"
+        style={{ color: "#6E6E73" }}
+      >
+        {p.description}
+      </p>
 
       {/* Footer */}
-      <div className="flex items-center justify-between gap-3">
-        {p.membersOnly && (
-          <span className="flex items-center gap-1.5 text-[11px] font-semibold
-                           text-amber-700 bg-amber-50 border border-amber-200
-                           px-2.5 py-1 rounded-full">
-            <Lock size={11} />
+      <div className="mt-auto pt-5 flex items-center justify-between gap-3 border-t border-[#E5E5EA] mt-5">
+        {p.membersOnly ? (
+          <span
+            className="text-xs font-medium"
+            style={{ color: "#FF4F3C" }}
+          >
             Members Only
           </span>
+        ) : (
+          <span />
         )}
 
-        <button
-          onClick={onBookNow}
-          className={[
-            "flex items-center gap-1.5 text-sm font-semibold transition-colors",
-            p.highlighted
-              ? "text-green-700 hover:text-green-900"
-              : "text-gray-700 hover:text-gray-900",
-            p.membersOnly ? "ml-auto" : "",
-          ].join(" ")}
+        <span
+          className="text-sm font-medium transition-colors group-hover:text-[#FF4F3C]"
+          style={{ color: "#0B0C2A" }}
         >
-          Book Now
-          <ArrowRight size={14} />
-        </button>
+          Book Now →
+        </span>
       </div>
     </article>
   );

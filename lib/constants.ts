@@ -2,11 +2,12 @@ import type { SessionType } from "./types";
 import { mockCoaches } from "./mockData";
 
 export const BRAND_COLORS = {
-  primary: "#1E3A8A",
-  accent:  "#7AC143",
-  danger:  "#EF4444",
-  warning: "#F97316",
-  muted:   "#6B7280",
+  primary:    "#0B0C2A",   // Dark navy
+  accent:     "#FF4F3C",   // Orange-red
+  cta:        "#7AC143",   // Green CTA
+  bg:         "#F5F5F7",   // Page background
+  textPrimary: "#1D1D1F",
+  textMuted:  "#6E6E73",
 } as const;
 
 export const SESSION_LABELS: Record<SessionType, string> = {

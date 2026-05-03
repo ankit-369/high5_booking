@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { label: "CONTACT US", href: "/#contact" },
 ];
 
+
 function FacebookIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -33,13 +34,19 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav style={{ backgroundColor: "#0f172a" }} className="w-full sticky top-0 z-40">
-      {/* ── Desktop & tablet bar ── */}
+    <nav className="w-full sticky top-0 z-40" style={{ backgroundColor: "#0B0C2A" }}>
+
+      {/* ── Main bar ─────────────────────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
 
         {/* Logo */}
-        <Link href="/" className="shrink-0 flex items-center gap-0 font-extrabold text-lg sm:text-xl tracking-tight text-white select-none">
-          HIGH<span style={{ color: "#7AC143" }}>5</span>&nbsp;PERFORMANCE
+        <Link href="/" className="shrink-0 flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://www.high5performance.in/wp-content/uploads/2021/12/Logo-Guidelines-18.png"
+            alt="High5 Performance"
+            className="h-10 w-auto object-contain"
+          />
         </Link>
 
         {/* Center nav — hidden on mobile */}
@@ -50,8 +57,9 @@ export default function Navbar() {
                 href={href}
                 className="text-white text-xs font-semibold tracking-wider uppercase
                            relative after:absolute after:left-0 after:-bottom-0.5
-                           after:h-px after:w-0 after:bg-white
-                           hover:after:w-full after:transition-all after:duration-200"
+                           after:h-px after:w-0 after:bg-[#FF4F3C]
+                           hover:text-[#FF4F3C] hover:after:w-full
+                           after:transition-all after:duration-200 transition-colors"
               >
                 {label}
               </Link>
@@ -65,7 +73,7 @@ export default function Navbar() {
             href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/70 hover:text-white transition-colors"
+            className="text-white/60 hover:text-white transition-colors"
             aria-label="Facebook"
           >
             <FacebookIcon />
@@ -74,7 +82,7 @@ export default function Navbar() {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/70 hover:text-white transition-colors"
+            className="text-white/60 hover:text-white transition-colors"
             aria-label="Instagram"
           >
             <InstagramIcon />
@@ -82,10 +90,10 @@ export default function Navbar() {
 
           <Link
             href="/book/trial"
-            style={{ backgroundColor: "#7AC143" }}
             className="ml-2 px-4 py-2 rounded-full text-white text-xs font-bold
                        tracking-wide uppercase whitespace-nowrap
                        hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: "#7AC143" }}
           >
             Book Your Trial Session
           </Link>
@@ -101,11 +109,11 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* ── Mobile slide-down menu ── */}
+      {/* ── Mobile slide-down menu ─────────────────────────────────────────── */}
       <div
-        style={{ backgroundColor: "#0f172a" }}
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out
                     ${mobileOpen ? "max-h-96 border-t border-white/10" : "max-h-0"}`}
+        style={{ backgroundColor: "#0B0C2A" }}
       >
         <ul className="px-4 py-3 flex flex-col gap-1">
           {NAV_LINKS.map(({ label, href }) => (
@@ -114,7 +122,7 @@ export default function Navbar() {
                 href={href}
                 onClick={() => setMobileOpen(false)}
                 className="block py-2.5 text-white text-sm font-semibold tracking-wider
-                           uppercase border-b border-white/10 hover:text-[#7AC143]
+                           uppercase border-b border-white/10 hover:text-[#FF4F3C]
                            transition-colors"
               >
                 {label}
@@ -126,7 +134,7 @@ export default function Navbar() {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/70 hover:text-white transition-colors"
+              className="text-white/60 hover:text-white transition-colors"
               aria-label="Facebook"
             >
               <FacebookIcon />
@@ -135,7 +143,7 @@ export default function Navbar() {
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/70 hover:text-white transition-colors"
+              className="text-white/60 hover:text-white transition-colors"
               aria-label="Instagram"
             >
               <InstagramIcon />
@@ -145,16 +153,17 @@ export default function Navbar() {
             <Link
               href="/book/trial"
               onClick={() => setMobileOpen(false)}
-              style={{ backgroundColor: "#7AC143" }}
               className="block text-center px-4 py-2.5 rounded-full text-white
                          text-xs font-bold tracking-wide uppercase hover:opacity-90
                          transition-opacity"
+              style={{ backgroundColor: "#7AC143" }}
             >
               Book Your Trial Session
             </Link>
           </li>
         </ul>
       </div>
+
     </nav>
   );
 }

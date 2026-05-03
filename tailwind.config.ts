@@ -34,18 +34,22 @@ const config: Config = {
         },
         // Brand palette — to swap a color just change the hex here
         primary: {
-          DEFAULT: "#1E3A8A",
+          DEFAULT: "#0B0C2A",
           foreground: "#FFFFFF",
         },
         accent: {
+          DEFAULT: "#FF4F3C",
+          foreground: "#FFFFFF",
+        },
+        cta: {
           DEFAULT: "#7AC143",
           foreground: "#FFFFFF",
         },
         muted: {
-          DEFAULT: "#6B7280",
+          DEFAULT: "#6E6E73",
           foreground: "#FFFFFF",
         },
-        danger: "#EF4444",
+        danger: "#FF4F3C",
         warning: "#F97316",
       },
       borderRadius: {

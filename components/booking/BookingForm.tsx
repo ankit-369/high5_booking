@@ -7,10 +7,11 @@ import {
   CheckCircle2, ArrowRight, ArrowLeft,
   type LucideIcon,
 } from "lucide-react";
+import { toast } from "sonner";
 import OtpModal from "@/components/shared/OtpModal";
 import { mockCoaches, mockSlots } from "@/lib/mockData";
 import { SESSION_LABELS } from "@/lib/constants";
-import type { SessionType, SlotBreakdown } from "@/lib/types";
+import type { SessionType, SlotBreakdown, Client } from "@/lib/types";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -47,7 +48,7 @@ const today = new Date().toISOString().split("T")[0];
 
 const INPUT =
   "w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 " +
-  "text-sm outline-none focus:border-[#1E3A8A] focus:bg-white transition-colors " +
+  "text-sm outline-none focus:border-[#0B0C2A] focus:bg-white transition-colors " +
   "placeholder:text-gray-400";
 
 function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
@@ -81,7 +82,7 @@ function StepIndicator({ current }: { current: number }) {
                 className={[
                   "w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all",
                   done || active
-                    ? "bg-[#1E3A8A] text-white shadow-sm"
+                    ? "bg-[#0B0C2A] text-white shadow-sm"
                     : "border-2 border-gray-300 text-gray-400 bg-white",
                 ].join(" ")}
               >
@@ -90,7 +91,7 @@ function StepIndicator({ current }: { current: number }) {
               <span
                 className={[
                   "text-[10px] font-semibold text-center leading-tight hidden sm:block",
-                  active ? "text-[#1E3A8A]" : done ? "text-gray-600" : "text-gray-400",
+                  active ? "text-[#0B0C2A]" : done ? "text-gray-600" : "text-gray-400",
                 ].join(" ")}
               >
                 {label}
@@ -101,7 +102,7 @@ function StepIndicator({ current }: { current: number }) {
               <div
                 className={[
                   "h-px mt-[18px] w-12 sm:w-20 shrink-0 transition-colors",
-                  current > n ? "bg-[#1E3A8A]" : "bg-gray-200",
+                  current > n ? "bg-[#0B0C2A]" : "bg-gray-200",
                 ].join(" ")}
               />
             )}
@@ -128,12 +129,28 @@ const EMPTY_INFO: PersonalInfo = { fullName: "", email: "", phone: "", dob: "", 
 
 // ─── BookingForm ──────────────────────────────────────────────────────────────
 
-export default function BookingForm({ sessionType }: { sessionType: SessionType }) {
-  const [step, setStep]       = useState(1);
+export default function BookingForm({
+  sessionType,
+  prefillData,
+}: {
+  sessionType: SessionType;
+  prefillData?: Client;
+}) {
+  const initialInfo: PersonalInfo = prefillData
+    ? {
+        fullName: prefillData.name,
+        email:    prefillData.email,
+        phone:    prefillData.phone,
+        dob:      prefillData.dob,
+        gender:   prefillData.gender,
+      }
+    : EMPTY_INFO;
+
+  const [step, setStep]       = useState(prefillData ? 2 : 1);
   const [otpOpen, setOtpOpen] = useState(false);
 
   // Step 1
-  const [info, setInfo]           = useState<PersonalInfo>(EMPTY_INFO);
+  const [info, setInfo]           = useState<PersonalInfo>(initialInfo);
   const [errors, setErrors]       = useState<InfoErrors>({});
 
   // Step 2
@@ -183,13 +200,17 @@ export default function BookingForm({ sessionType }: { sessionType: SessionType 
   function handleConfirm() {
     if (!coachId || !date || !slotId) { setStep2Err(true); return; }
     setStep(3);
+    toast.success("Booking confirmed! See you there.");
   }
 
   // ── Reset ──────────────────────────────────────────────────────────────────
 
   function reset() {
-    setStep(1);
-    setInfo(EMPTY_INFO);
+    setStep(prefillData ? 2 : 1);
+    setInfo(prefillData
+      ? { fullName: prefillData.name, email: prefillData.email, phone: prefillData.phone, dob: prefillData.dob, gender: prefillData.gender }
+      : EMPTY_INFO
+    );
     setErrors({});
     setCoachId("");
     setDate("");
@@ -206,6 +227,22 @@ export default function BookingForm({ sessionType }: { sessionType: SessionType 
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-sky-100 py-10 px-4">
       <div className="max-w-2xl mx-auto">
         <StepIndicator current={step} />
+
+        {/* Member info card — shown when pre-filled from member login */}
+        {prefillData && step < 3 && (
+          <div className="mb-4 bg-blue-50 border border-blue-100 rounded-xl px-5 py-4 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">
+                Logged in as Member
+              </p>
+              <p className="text-sm font-semibold text-gray-800">{prefillData.name}</p>
+              <p className="text-xs text-gray-500">{prefillData.email} · +91 {prefillData.phone}</p>
+            </div>
+            <Link href="/member" className="text-xs font-semibold text-[#0B0C2A] hover:underline shrink-0 mt-0.5">
+              Edit
+            </Link>
+          </div>
+        )}
 
         {/* ══ STEP 1 — Personal Info ═══════════════════════════════════════ */}
         {step === 1 && (
@@ -259,7 +296,7 @@ export default function BookingForm({ sessionType }: { sessionType: SessionType 
               <Field label="Phone Number" error={errors.phone}>
                 <div
                   className="flex items-stretch rounded-xl border border-gray-200 bg-gray-50
-                             overflow-hidden focus-within:border-[#1E3A8A] focus-within:bg-white
+                             overflow-hidden focus-within:border-[#0B0C2A] focus-within:bg-white
                              transition-colors"
                 >
                   <span className="flex items-center px-3 text-sm font-semibold text-gray-500 border-r border-gray-200 shrink-0">
@@ -316,7 +353,7 @@ export default function BookingForm({ sessionType }: { sessionType: SessionType 
               onClick={handleContinue}
               className="mt-7 w-full flex items-center justify-center gap-2 py-3.5 rounded-xl
                          text-white text-sm font-semibold hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: "#1E3A8A" }}
+              style={{ backgroundColor: "#0B0C2A" }}
             >
               Continue to Schedule
               <ArrowRight size={16} />
@@ -402,8 +439,8 @@ export default function BookingForm({ sessionType }: { sessionType: SessionType 
                               full
                                 ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed"
                                 : selected
-                                ? "border-[#1E3A8A] bg-[#1E3A8A] text-white shadow-sm"
-                                : "border-gray-200 bg-white text-gray-700 hover:border-[#1E3A8A] hover:text-[#1E3A8A]",
+                                ? "border-[#0B0C2A] bg-[#0B0C2A] text-white shadow-sm"
+                                : "border-gray-200 bg-white text-gray-700 hover:border-[#0B0C2A] hover:text-[#0B0C2A]",
                             ].join(" ")}
                           >
                             <span>{slot.startTime} – {slot.endTime}</span>
@@ -440,19 +477,30 @@ export default function BookingForm({ sessionType }: { sessionType: SessionType 
             )}
 
             <div className="flex gap-3 mt-7">
-              <button
-                onClick={() => setStep(1)}
-                className="flex items-center gap-2 px-5 py-3.5 rounded-xl border border-gray-200
-                           text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors"
-              >
-                <ArrowLeft size={16} />
-                Back
-              </button>
+              {prefillData ? (
+                <Link
+                  href="/member"
+                  className="flex items-center gap-2 px-5 py-3.5 rounded-xl border border-gray-200
+                             text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors"
+                >
+                  <ArrowLeft size={16} />
+                  Back
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setStep(1)}
+                  className="flex items-center gap-2 px-5 py-3.5 rounded-xl border border-gray-200
+                             text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors"
+                >
+                  <ArrowLeft size={16} />
+                  Back
+                </button>
+              )}
               <button
                 onClick={handleConfirm}
                 className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl
                            text-white text-sm font-semibold hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: "#1E3A8A" }}
+                style={{ backgroundColor: "#0B0C2A" }}
               >
                 Confirm Booking
                 <ArrowRight size={16} />
@@ -517,7 +565,7 @@ export default function BookingForm({ sessionType }: { sessionType: SessionType 
                 href="/"
                 className="flex-1 py-3.5 rounded-xl text-white text-sm font-semibold
                            text-center hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: "#1E3A8A" }}
+                style={{ backgroundColor: "#0B0C2A" }}
               >
                 Go Home
               </Link>

@@ -1,7 +1,10 @@
+"use client";
+
+import { useAdminAuth } from "@/lib/auth";
+import DashboardPage from "@/components/coach/DashboardPage";
+
 export default function AdminPage() {
-  return (
-    <main className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold text-primary">Super Admin</h1>
-    </main>
-  );
+  const ready = useAdminAuth();
+  if (!ready) return null;
+  return <DashboardPage isAdmin />;
 }
